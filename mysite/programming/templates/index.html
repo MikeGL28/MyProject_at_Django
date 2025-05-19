@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% block title %}Программирование{% endblock %}
+
+{% block body %}
+<h1>Как я стал программистом 💻</h1>
+
+<div class="about-section d-flex flex-wrap align-items-center">
+  <!-- Левая часть: текст -->
+  <div class="about-text col-md-6 col-12">
+    <p>
+      Программирование стало для меня не просто работой — это страсть, которая помогает мне решать сложные задачи и постоянно расти.
+      Всё началось с первого курса университета, когда я впервые открыл PyCharm и написал "Hello, World!".
+      Постепенно увлечение превратилось в навык, а затем и в профессию.
+    </p>
+    <p>
+      Сейчас я занимаюсь разработкой веб-приложений на Python, используя Django, Flask, HTML/CSS, JS.
+      Также изучаю базы данных, REST API и начинаю осваивать машинное обучение.
+    </p>
+  </div>
+
+  <!-- Правая часть: фото -->
+  <div class="photo-container col-md-6 col-12 d-flex justify-content-center">
+    <img src="https://via.placeholder.com/300x200?text=Me+with+Code " alt="Моё фото за компьютером">
+  </div>
+</div>
+
+<!-- Сертификаты -->
+<h2 class="mt-5">Мои достижения 🏆</h2>
+<div class="certificate-grid">
+  {% for cert in certificates %}
+    <div class="certificate-card">
+      <img src="{{ cert.image.url }}" alt="{{ cert.title }}">
+      <h4>{{ cert.title }}</h4>
+      <p>{{ cert.description|default:"" }}</p>
+    </div>
+  {% empty %}
+    <p>Пока нет загруженных сертификатов.</p>
+  {% endfor %}
+</div>
+
+<!-- Кнопка скачивания резюме -->
+<div class="resume-download text-center mt-5">
+  <a href="{{ resume_url }}" class="btn btn-primary btn-lg" download>
+    📄 Скачать моё резюме
+  </a>
+</div>
+
+<style>
+/* Стиль для раздела текст + фото */
+.about-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin-top: 20px;
+}
+.about-text {
+  flex: 1 1 400px;
+}
+.photo-container {
+  flex: 1 1 300px;
+  display: flex;
+  justify-content: center;
+}
+.photo-container img {
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Сертификаты */
+.certificate-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+.certificate-card {
+  flex: 0 0 calc(33.33% - 14px);
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  padding: 10px;
+  text-align: center;
+}
+.certificate-card img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+.certificate-card h4 {
+  font-size: 1rem;
+  margin: 10px 0 5px;
+}
+.certificate-card p {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+/* Адаптация под планшеты */
+@media (max-width: 768px) {
+  .about-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .certificate-card {
+    flex: 0 0 calc(50% - 10px);
+  }
+}
+
+/* Адаптация под мобильные устройства */
+@media (max-width: 480px) {
+  .certificate-card {
+    flex: 0 0 100%;
+  }
+}
+</style>
+
+{% endblock %}

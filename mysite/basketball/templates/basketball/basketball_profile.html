@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Баскетбол 🏀{% endblock %}
+
+{% block body %}
+<h1>Баскетбол 🏀</h1>
+
+<div class="about-section d-flex flex-wrap align-items-center">
+  <!-- Левая часть: текст -->
+  <div class="about-text col-md-6 col-12">
+    <p>
+      Баскетбол для меня — это не просто спорт, а способ быть в тонусе и развивать командное мышление.
+      Играю уже несколько лет, участвую в местных турнирах и стараюсь расти как игрок.
+    </p>
+    <p>
+      Мне нравится чувство команды, когда каждый знает свою роль, и вместе мы выигрываем.
+      Сейчас я играю как защитник, работаю над бросками и скоростью реакции.
+    </p>
+  </div>
+
+  <!-- Правая часть: фото -->
+  <div class="photo-container col-md-6 col-12 d-flex justify-content-center">
+    <img src="/media/hobbies/photo_5258289733228950693_y.jpg" alt="Моё фото на баскетбольной площадке">
+  </div>
+</div>
+
+<!-- Статистика игроков -->
+<h2 class="mt-5">Наши игроки 🏆</h2>
+<table class="table table-striped table-hover">
+  <thead class="table-dark">
+    <tr>
+      <th>ФИО</th>
+      <th>Позиция</th>
+      <th>Номер</th>
+      <th>Рост</th>
+      <th>Вес</th>
+      <th>2-очки</th>
+      <th>3-очки</th>
+      <th>Общие очки</th>
+      <th>Средние очки</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for player in players %}
+      <tr>
+        <td>{{ player.full_name }}</td>
+        <td>{{ player.position }}</td>
+        <td>{{ player.jersey_number|default:"—" }}</td>
+        <td>{{ player.height|default:"—" }} см</td>
+        <td>{{ player.weight|default:"—" }} кг</td>
+        <td>{{ player.two_pointers }}</td>
+        <td>{{ player.three_pointers }}</td>
+        <td>{{ player.total_points }}</td>
+        <td>{{ player.avg_points }}</td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="9">Пока нет игроков.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!-- Календарь тренировок -->
+<h2 class="mt-5">Календарь тренировок 🏀</h2>
+<div class="calendar">
+  <div class="calendar-header">
+    {{ month_name|title }} {{ now.year }}
+  </div>
+  <div class="calendar-grid">
+    {% for day in calendar %}
+      <div class="day-cell level-{{ day.level }}" title="{{ day.day }} {{ month_name }}: {{ day.level }}">
+        {{ day.day }}
+      </div>
+    {% endfor %}
+  </div>
+  <div class="calendar-legend mt-3">
+    <span class="legend-item level-0">Нет данных</span>
+    <span class="legend-item level-1">Мало активности</span>
+    <span class="legend-item level-2">Средняя активность</span>
+    <span class="legend-item level-3">Хорошая тренировка</span>
+    <span class="legend-item level-4">Отличная тренировка</span>
+  </div>
+</div>
+
+<!-- Ссылки на добавление и редактирование -->
+<div class="actions mt-4">
+  <a href="{% url 'basketball:add_basketball_session' %}" class="btn btn-primary">Добавить тренировку</a>
+  <a href="#" class="btn btn-success">Добавить игрока</a>
+</div>
+
+<style>
+.photo-container {
+  flex: 1 1 300px;
+  display: flex;
+  justify-content: center;
+}
+.photo-container img {
+  max-width: 50%;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+.calendar {
+  margin-top: 20px;
+}
+.calendar-header {
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: 10px;
+  color: #333;
+}
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  max-width: 500px;
+}
+.day-cell {
+  width: 30px;
+  height: 30px;
+  background-color: #ebedf0;
+  border-radius: 4px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.day-cell:hover {
+  transform: scale(1.1);
+}
+/* Уровни активности */
+.day-cell.level-0 { background-color: #ebedf0; }
+.day-cell.level-1 { background-color: #c6e48b; }
+.day-cell.level-2 { background-color: #7bc96f; }
+.day-cell.level-3 { background-color: #28a745; }
+.day-cell.level-4 { background-color: #21863a; }
+
+.calendar-legend {
+  display: flex;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+.legend-item.level-0::before,
+.legend-item.level-1::before,
+.legend-item.level-2::before,
+.legend-item.level-3::before,
+.legend-item.level-4::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 4px;
+  border-radius: 4px;
+}
+.legend-item.level-0::before { background-color: #ebedf0; }
+.legend-item.level-1::before { background-color: #c6e48b; }
+.legend-item.level-2::before { background-color: #7bc96f; }
+.legend-item.level-3::before { background-color: #28a745; }
+.legend-item.level-4::before { background-color: #21863a; }
+</style>
+
+{% endblock %}
