@@ -30,9 +30,6 @@
     <tr>
       <th>ФИО</th>
       <th>Позиция</th>
-      <th>Номер</th>
-      <th>Рост</th>
-      <th>Вес</th>
       <th>2-очки</th>
       <th>3-очки</th>
       <th>Общие очки</th>
@@ -44,22 +41,75 @@
       <tr>
         <td>{{ player.full_name }}</td>
         <td>{{ player.position }}</td>
-        <td>{{ player.jersey_number|default:"—" }}</td>
-        <td>{{ player.height|default:"—" }} см</td>
-        <td>{{ player.weight|default:"—" }} кг</td>
         <td>{{ player.two_pointers }}</td>
         <td>{{ player.three_pointers }}</td>
         <td>{{ player.total_points }}</td>
-        <td>{{ player.avg_points }}</td>
+        <td>{{ player.avg_points|floatformat:2 }}</td>
       </tr>
     {% empty %}
-      <tr><td colspan="9">Пока нет игроков.</td></tr>
+      <tr><td colspan="6">Пока нет игроков.</td></tr>
     {% endfor %}
+  </tbody>
+</table>
+<div class="row row-cols-1 row-cols-md-5 g-4 mt-2">
+  {% for player in players %}
+    <div class="col">
+      <div class="card h-100 shadow-sm" style="height: 500px; position: relative;">
+        <!-- Фото игрока -->
+        <img src="{{ player.photo.url }}" class="card-img-top" alt="{{ player.full_name }}" style="height: 500px; object-fit: cover;">
+
+        <!-- Текстовое описание поверх фото -->
+        <div class="card-img-overlay d-flex flex-column justify-content-end" style="background: linear-gradient(to top, rgba(255, 255, 255, 0.3) 30%, transparent);">
+          <div style="background-color: rgba(255, 255, 255, 0.65); padding: 1rem; border-radius: 6px;">
+            <h5 class="card-title">{{ player.full_name }}</h5>
+            <p class="card-text"><strong>Позиция:</strong> {{ player.position|default:"—" }}</p>
+            <p class="card-text"><strong>Рост:</strong> {{ player.height|default:"—" }} см</p>
+            <p class="card-text"><strong>Вес:</strong> {{ player.weight|default:"—" }} кг</p>
+            <p class="card-text"><strong>Эффективность:</strong> {{ player.avg_points|floatformat:2 }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <p>Нет игроков для отображения.</p>
+  {% endfor %}
+</div>
+
+<!-- Таблица тренировок / игр -->
+<h2 class="mt-5">Мои игры и тренировки 🏀</h2>
+<table class="table table-bordered table-hover">
+  <thead class="table-success">
+    <tr>
+      <th>Дата</th>
+      <th>2-очковые</th>
+      <th>3-очковые</th>
+      <th>Всего очков</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% if games %}
+      {% for game in games %}
+        <tr>
+          <td>{{ game.date }}</td>
+          <td>{{ game.two_pointers }}</td>
+          <td>{{ game.three_pointers }}</td>
+          <td>{{ game.total_points }}</td>
+        </tr>
+      {% endfor %}
+      <tr class="table-info">
+        <td colspan="3" class="text-end"><strong>Среднее по всем играм:</strong></td>
+        <td><strong>{{ avg_points }}</strong></td>
+      </tr>
+    {% else %}
+      <tr>
+        <td colspan="4" class="text-center">Нет записей о тренировках</td>
+      </tr>
+    {% endif %}
   </tbody>
 </table>
 
 <!-- Календарь тренировок -->
-<h2 class="mt-5">Календарь тренировок 🏀</h2>
+<h2 class="mt-5">Календарь тренировок 📅</h2>
 <div class="calendar">
   <div class="calendar-header">
     {{ month_name|title }} {{ now.year }}
@@ -73,20 +123,32 @@
   </div>
   <div class="calendar-legend mt-3">
     <span class="legend-item level-0">Нет данных</span>
-    <span class="legend-item level-1">Мало активности</span>
-    <span class="legend-item level-2">Средняя активность</span>
-    <span class="legend-item level-3">Хорошая тренировка</span>
-    <span class="legend-item level-4">Отличная тренировка</span>
+    <span class="legend-item level-1">Тренировка</span>
   </div>
 </div>
 
-<!-- Ссылки на добавление и редактирование -->
+<!-- Ссылки на действия -->
 <div class="actions mt-4">
-  <a href="{% url 'basketball:add_basketball_session' %}" class="btn btn-primary">Добавить тренировку</a>
-  <a href="#" class="btn btn-success">Добавить игрока</a>
+  <a href="{% url 'basketball:add_basketball_game' %}" class="btn btn-primary">Добавить игру</a>
+  <a href="{% url 'basketball:add_player' %}" class="btn btn-success">Добавить игрока</a>
 </div>
 
 <style>
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  background-image: url('/static/css/basketbol-naa-spinka.jpg');
+  background-size: cover;
+  background-position: 80% center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 .photo-container {
   flex: 1 1 300px;
   display: flex;
@@ -97,6 +159,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
+
 .calendar {
   margin-top: 20px;
 }
